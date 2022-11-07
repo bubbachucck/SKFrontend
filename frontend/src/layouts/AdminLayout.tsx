@@ -157,7 +157,9 @@ const AdminLayout: React.FC<LayoutPropTypes> = ({ children }) => {
             <InterviewNavItems />
           </List>
         </Drawer>
-        {children}
+        <Box padding="120px" width="100%">
+          {children}
+        </Box>
       </Box>
     </section>
   );

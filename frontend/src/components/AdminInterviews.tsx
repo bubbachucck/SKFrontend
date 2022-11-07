@@ -1,15 +1,10 @@
 import {
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   Grid,
   Box,
   Button,
   ButtonGroup,
 } from "@mui/material";
 import React from "react";
-import { Navigation } from "./Navigation";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -20,27 +15,29 @@ import AdminLayout from "../layouts/AdminLayout";
 const getAllInterviews = () => {
   return [
     { interivewId: "1", title: "Interview 1", sectionName: "Section 1" },
+    { interivewId: "2", title: "Interview 2", sectionName: "Section 1" },
     { interivewId: "2", title: "Interview 1", sectionName: "Section 2" },
     { interviewId: "3", title: "Interview 1", sectionName: "Section 3" },
   ];
 };
 
-interface InterviewHeader {
+interface InterviewInterface {
   interviewId?: string;
   title: string;
   sectionName: string;
 }
 
-interface InterviewHeaders {
-  interviewHeaders: InterviewHeader[];
+interface InterviewInterfaces {
+  InterviewInterfaces: InterviewInterface[];
 }
 
 interface SectionMap {
-  sectionMap: Map<string, InterviewHeader[] | undefined>;
+  sectionMap: Map<string, InterviewInterface[] | undefined>;
 }
 
-export const Sections: React.FC<SectionMap> = (map) => {
-  let sections = Array.from(map.sectionMap.keys());
+export const Sections: React.FC<SectionMap> = (props) => {
+  let sections = Array.from(props.sectionMap.keys());
+  console.log(props.sectionMap, 'sec ...')
   return (
     <>
       {sections.map((section) => (
@@ -59,14 +56,16 @@ export const Sections: React.FC<SectionMap> = (map) => {
               >
                 <Typography>Interview Name</Typography>
                 <Typography>Department</Typography>
-                <ButtonGroup
-                  variant="contained"
-                  aria-label="outlined primary button group"
-                >
-                  <Button>Show</Button>
-                  <Button>Edit</Button>
-                  <Button>Destroy</Button>
-                </ButtonGroup>
+                <Box>
+                  <ButtonGroup
+                    variant="contained"
+                    aria-label="outlined primary button group"
+                  >
+                    <Button>Show</Button>
+                    <Button>Edit</Button>
+                    <Button>Destroy</Button>
+                  </ButtonGroup>
+                </Box>
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -76,8 +75,8 @@ export const Sections: React.FC<SectionMap> = (map) => {
   );
 };
 
-export const Interviews: React.FC<InterviewHeaders> = (interviewHeaders) => {
-  let headers = interviewHeaders.interviewHeaders;
+export const Interviews: React.FC<InterviewInterfaces> = (InterviewInterfaces) => {
+  let headers = InterviewInterfaces.InterviewInterfaces;
   return (
     <>
       {headers.map((header) => (
@@ -95,12 +94,23 @@ export const InterviewNavItems: React.FC = () => {
 
 export const AdminInterviews: React.FC = () => {
   const [sectionMap, setSectionMap] = React.useState(
-    new Map<string, InterviewHeader[] | undefined>()
+    new Map<string, InterviewInterface[] | undefined>()
   );
 
   React.useEffect(() => {
     const interviews = getAllInterviews();
-    const sectionMapHolder = new Map<string, InterviewHeader[] | undefined>();
+
+    // const interviewsPerSection = interviews.reduce((accumulator: any, interview) => {
+    //   const sectionName = interview.sectionName;
+    //   if (accumulator[sectionName]) {
+    //     accumulator[sectionName].push(interview)
+    //   } else {
+    //     accumulator[sectionName] = [interview]
+    //   }
+    //   return accumulator;
+    // }, {})
+
+    const sectionMapHolder = new Map<string, InterviewInterface[] | undefined>();
 
     for (let i = 0; i < interviews.length; i++) {
       let header = interviews[i];
@@ -110,7 +120,7 @@ export const AdminInterviews: React.FC = () => {
         sectionHeaders?.push(header);
         sectionMapHolder.set(sectionName, sectionHeaders);
       } else {
-        sectionMapHolder.set(sectionName, []);
+        sectionMapHolder.set(sectionName, [header]);
       }
     }
 
@@ -119,7 +129,7 @@ export const AdminInterviews: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Grid container justifyContent="center" sx = {{paddingTop: 10}}>
+      <Grid container justifyContent="center" sx={{ paddingTop: 10 }}>
         <Grid item xs={10}>
           <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
             <Typography>List of Interviews</Typography>
