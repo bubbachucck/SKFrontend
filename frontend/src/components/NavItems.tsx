@@ -24,7 +24,7 @@ export const InterviewNavItems: React.FC = () => {
   return (
     <>
       {adminRoutes.map((path) => (
-        <div>
+        <div key={path.name}>
           <ListItemButton key={path.name} onClick={() => navigate(path.route)}>
             <ListItemIcon>
               <DashboardIcon />

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, createTheme } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -34,8 +34,6 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -61,15 +59,12 @@ const Drawer = styled(MuiDrawer, {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      // Set this to Zero to remove the icons
       width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
     }),
   },
 }));
 
-const mdTheme = createTheme();
 
 export interface LayoutPropTypes {
   children: React.ReactNode;
@@ -80,12 +75,10 @@ const AdminLayout: React.FC<LayoutPropTypes> = ({ children }) => {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-  let navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
   const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
