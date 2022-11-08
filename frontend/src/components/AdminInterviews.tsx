@@ -1,9 +1,4 @@
-import {
-  Grid,
-  Box,
-  Button,
-  ButtonGroup,
-} from "@mui/material";
+import { Grid, Box, Button, ButtonGroup } from "@mui/material";
 import React from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -14,10 +9,10 @@ import AdminLayout from "../layouts/AdminLayout";
 
 const getAllInterviews = () => {
   return [
-    { interivewId: "1", title: "Interview 1", sectionName: "Section 1" },
-    { interivewId: "2", title: "Interview 2", sectionName: "Section 1" },
-    { interivewId: "2", title: "Interview 1", sectionName: "Section 2" },
-    { interviewId: "3", title: "Interview 1", sectionName: "Section 3" },
+    { interivewId: "1", title: "Interview 1", sectionName: "Section 1", department: "Human Resources" },
+    { interivewId: "2", title: "Interview 2", sectionName: "Section 1", department: "Human Resources" },
+    { interivewId: "2", title: "Interview 1", sectionName: "Section 2", department: "Human Resources"},
+    { interviewId: "3", title: "Interview 1", sectionName: "Section 3", department: "Human Resources" },
   ];
 };
 
@@ -25,10 +20,11 @@ interface InterviewInterface {
   interviewId?: string;
   title: string;
   sectionName: string;
+  department: string;
 }
 
 interface InterviewInterfaces {
-  InterviewInterfaces: InterviewInterface[];
+  InterviewInterfaces: InterviewInterface[] | undefined;
 }
 
 interface SectionMap {
@@ -37,7 +33,7 @@ interface SectionMap {
 
 export const Sections: React.FC<SectionMap> = (props) => {
   let sections = Array.from(props.sectionMap.keys());
-  console.log(props.sectionMap, 'sec ...')
+  console.log(props.sectionMap, "sec ...");
   return (
     <>
       {sections.map((section) => (
@@ -51,22 +47,9 @@ export const Sections: React.FC<SectionMap> = (props) => {
               <Typography>{section}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box
-                sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}
-              >
-                <Typography>Interview Name</Typography>
-                <Typography>Department</Typography>
-                <Box>
-                  <ButtonGroup
-                    variant="contained"
-                    aria-label="outlined primary button group"
-                  >
-                    <Button>Show</Button>
-                    <Button>Edit</Button>
-                    <Button>Destroy</Button>
-                  </ButtonGroup>
-                </Box>
-              </Box>
+              <Interviews
+                InterviewInterfaces={props.sectionMap.get(section)}
+              ></Interviews>
             </AccordionDetails>
           </Accordion>
         </div>
@@ -75,13 +58,28 @@ export const Sections: React.FC<SectionMap> = (props) => {
   );
 };
 
-export const Interviews: React.FC<InterviewInterfaces> = (InterviewInterfaces) => {
+export const Interviews: React.FC<InterviewInterfaces> = (
+  InterviewInterfaces
+) => {
   let headers = InterviewInterfaces.InterviewInterfaces;
   return (
     <>
-      {headers.map((header) => (
+      {headers?.map((header) => (
         <div>
-          <Typography></Typography>
+          <Box sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", paddingTop: 2 }}>
+            <Typography>{header.title}</Typography>
+            <Typography>{header.department}</Typography>
+            <Box>
+              <ButtonGroup
+                variant="contained"
+                aria-label="outlined primary button group"
+              >
+                <Button>Show</Button>
+                <Button>Edit</Button>
+                <Button>Destroy</Button>
+              </ButtonGroup>
+            </Box>
+          </Box>
         </div>
       ))}
     </>
@@ -110,7 +108,10 @@ export const AdminInterviews: React.FC = () => {
     //   return accumulator;
     // }, {})
 
-    const sectionMapHolder = new Map<string, InterviewInterface[] | undefined>();
+    const sectionMapHolder = new Map<
+      string,
+      InterviewInterface[] | undefined
+    >();
 
     for (let i = 0; i < interviews.length; i++) {
       let header = interviews[i];
